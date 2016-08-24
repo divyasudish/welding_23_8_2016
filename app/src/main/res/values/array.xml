@@ -1,0 +1,25 @@
+<resources>
+    <string-array name="spinner_list_item_array">
+        <item>Group 1</item>
+        <item>Group 2</item>
+        <item>Group 3</item>
+        <item>Group 4</item>
+        <item>Group 5</item>
+        <item>Group 6</item>
+        <item>Group 7</item>
+        <item>Group 8</item>
+        <item>Group 9</item>
+        <item>Group 10</item>
+    </string-array>
+    <string-array name="new_device_spinner_list">
+        <item>BLDC Motor</item>
+        <item>IMU</item>
+        <item>Relative Encoder</item>
+        <item>Absolute Encoder</item>
+        <item>Digital input</item>
+        <item>Proximity input</item>
+        <item>Solenoid</item>
+        <item>All</item>
+        <item>None</item>
+    </string-array>
+</resources>

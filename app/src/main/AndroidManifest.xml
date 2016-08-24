@@ -51,7 +51,20 @@
         <activity
             android:name=".activities.NewDeviceActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.DeviceSelectionActivity"
+        <activity
+            android:name=".activities.DeviceSelectionActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.TorchHeadPositonActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.TorchMainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CalibrationMainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.SensorActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.DataLogMainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.DataLogActivity"
             android:screenOrientation="portrait" />
     </application>
 

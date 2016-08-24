@@ -23,7 +23,7 @@ public class ConnectionAdapter extends BaseAdapter {
 
     private Context mContext;
     private Intent mIntent;
-    private List<ConnectionClass> mList;
+    public List<ConnectionClass> mList;
 
     public ConnectionAdapter(Context context, List<ConnectionClass> connectionClassList) {
         this.mList = connectionClassList;
@@ -46,7 +46,7 @@ public class ConnectionAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(this.mContext).inflate(R.layout.list_connection, null);
@@ -61,6 +61,37 @@ public class ConnectionAdapter extends BaseAdapter {
         //viewHolder.checkBox.setText(mList.get(position).getC());
         viewHolder.ipAddress.setText(mList.get(position).getmIpAddress());
         viewHolder.portNumber.setText(mList.get(position).getmPort());
+        viewHolder.portNumber.setId(position);
+        viewHolder.portNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    final int position = v.getId();
+                    final EditText Caption = (EditText) v;
+                    try {
+                        mList.get(position).setmPort(Caption.getText().toString());
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        });
+
+        if (mList.get(position).ismCheckBox())
+            viewHolder.checkBox.setChecked(true);
+        else
+            viewHolder.checkBox.setChecked(false);
+
+        viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (viewHolder.checkBox.isChecked())
+                    mList.get(position).setmCheckBox(true);
+                else
+                    mList.get(position).setmCheckBox(false);
+            }
+        });
+
 
         return convertView;
     }

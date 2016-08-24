@@ -8,15 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.adapter.DeviceInfoAdapter;
 import welding.taal.com.welding_23_08_2016.adapter.DeviceSelectionAdapter;
@@ -30,8 +35,11 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     protected Button mSave;
     @Bind(R.id.deviceSelectionList)
     protected ListView mDeviceList;
+    @Bind(R.id.linear)
+    protected LinearLayout ln;
 
-    private ArrayList<DeviceSelectionClass> deviceSelectionList;
+    private List<DeviceSelectionClass> deviceSelectionList;
+    private List<DeviceClass> newDeviceList;
     private DeviceSelectionAdapter deviceSelectionAdapter;
     private DatabaseHelper db;
     @Override
@@ -42,6 +50,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         db = new DatabaseHelper(getApplicationContext());
         deviceSelectionList = new ArrayList<>();
+        newDeviceList = new ArrayList<>();
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -65,13 +74,30 @@ public class DeviceSelectionActivity extends AppCompatActivity {
                 System.out.println(e.toString());
             }
         }
-        init();
+        newDeviceList = db.getAllNewDevices();
+        if(newDeviceList.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "No device in database", Toast.LENGTH_LONG).show();
+        }
+        else if(!newDeviceList.isEmpty()) {
+            ln.setVisibility(View.VISIBLE);
+            mSave.setVisibility(View.VISIBLE);
+        }
+        for(int i = 0; i < newDeviceList.size(); i++) {
+            deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", newDeviceList.get(i).ismChecked()));
+        }
         deviceSelectionAdapter = new DeviceSelectionAdapter(DeviceSelectionActivity.this, deviceSelectionList);
         mDeviceList.setAdapter(deviceSelectionAdapter);
 
     }
-    private void init() {
-        deviceSelectionList.add(new DeviceSelectionClass("Crc_evans", "Bldc Motor","kkk", false));
+    @OnClick(R.id.saveBut)
+    protected void save() {
+        db.deleteSelectionDeviceList();
+        for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
+            if(deviceSelectionAdapter.mDeviceList.get(i).ismChecked()==true) {
+                db.createDeviceSelection(new DeviceSelectionClass(deviceSelectionAdapter.mDeviceList.get(i).getDevice().trim(), deviceSelectionAdapter.mDeviceList.get(i).getOperation().trim(), deviceSelectionAdapter.mDeviceList.get(i).getGroup().trim(), deviceSelectionAdapter.mDeviceList.get(i).ismChecked()));
+                System.out.println("Datas are " + deviceSelectionAdapter.mDeviceList.get(i).getDevice());
+            }
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

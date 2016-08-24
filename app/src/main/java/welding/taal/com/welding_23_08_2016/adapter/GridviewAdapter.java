@@ -11,9 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import welding.taal.com.welding_23_08_2016.R;
+import welding.taal.com.welding_23_08_2016.activities.CalibrationMainActivity;
+import welding.taal.com.welding_23_08_2016.activities.DataLogMainActivity;
 import welding.taal.com.welding_23_08_2016.activities.DeviceSelectionActivity;
 import welding.taal.com.welding_23_08_2016.activities.MainMenuActivity;
 import welding.taal.com.welding_23_08_2016.activities.NewDeviceActivity;
+import welding.taal.com.welding_23_08_2016.activities.TorchHeadPositonActivity;
+import welding.taal.com.welding_23_08_2016.activities.TorchMainActivity;
 
 /**
  * Created by divyashree_nair on 29/2/16.
@@ -82,22 +86,18 @@ public class GridviewAdapter extends BaseAdapter {
                     mIntent.putExtra(mKey, "Device");
                     context.startActivity(mIntent);
                     break;
-//                case "Data Log":
-//                    mIntent = new Intent(context, DataLogNewActivity.class);
-//                    context.startActivity(mIntent);
-//                    break;
-//                case "Torch Head Position":
-//                    mIntent = new Intent(context, MachineProgressNewActivity.class);
-//                    context.startActivity(mIntent);
-//                    break;
-//                case "Calibration":
-//                    mIntent = new Intent(context, SensorActivity.class);
-//                    context.startActivity(mIntent);
-//                    break;
-//                case "GearBox Status":
-//                    mIntent = new Intent(context, Motor_GairBoxActivity.class);
-//                    context.startActivity(mIntent);
-//                    break;
+                case "Data Log":
+                    mIntent = new Intent(context, DataLogMainActivity.class);
+                    context.startActivity(mIntent);
+                    break;
+                case "Torch Head Position":
+                    mIntent = new Intent(context, TorchMainActivity.class);
+                    context.startActivity(mIntent);
+                    break;
+                case "Calibration":
+                    mIntent = new Intent(context, CalibrationMainActivity.class);
+                    context.startActivity(mIntent);
+                    break;
 //                case "Firmware Upgrade":
 //                    mIntent = new Intent(context, UpgradeFirmwareActivity.class);
 //                    context.startActivity(mIntent);

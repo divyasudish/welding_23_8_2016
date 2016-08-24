@@ -15,7 +15,7 @@ public class DeviceSelectionClass {
 
     }
 
-    public DeviceSelectionClass(String device, String sub, String gr, boolean checked){
+    public DeviceSelectionClass(String device, String sub, String gr, boolean checked) {
         Device = device;
         operation = sub;
         group = gr;

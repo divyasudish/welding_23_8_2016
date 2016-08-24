@@ -21,11 +21,13 @@
         android:gravity="center"
         android:layout_marginTop="10dp"/>
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="50dp"
         android:layout_below="@+id/title"
+        android:visibility="invisible"
         android:orientation="horizontal">
 
         <TextView
@@ -72,6 +74,7 @@
         android:layout_marginTop="10dp"
         android:textAllCaps="false"
         android:text="Save"
+        android:visibility="invisible"
         android:layout_marginLeft="100dp"
         android:layout_below="@+id/deviceSelectionList"
         android:background="@drawable/custom_button"/>

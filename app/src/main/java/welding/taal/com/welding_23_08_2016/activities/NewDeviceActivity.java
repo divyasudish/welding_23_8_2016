@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,6 +37,8 @@ public class NewDeviceActivity extends AppCompatActivity {
     protected Button mCreate;
     @Bind(R.id.newDeviceList)
     protected ListView mNewDeviceList;
+    @Bind(R.id.linear)
+    protected LinearLayout ln;
 
     private ArrayAdapter<String> adapter;
     private List<String> list;
@@ -43,7 +47,7 @@ public class NewDeviceActivity extends AppCompatActivity {
     private Button createEdit;
     Boolean flag = false;
 
-    private ArrayList<DeviceClass> newDeviceList;
+    private List<DeviceClass> newDeviceList;
     private DeviceInfoAdapter deviceInfoAdapter;
 
     @Override
@@ -76,22 +80,35 @@ public class NewDeviceActivity extends AppCompatActivity {
                 System.out.println(e.toString());
             }
         }
-        init();
+        newDeviceList = db.getAllNewDevices();
+        if(newDeviceList.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "No device in database", Toast.LENGTH_LONG).show();
+        }
+        else if(!newDeviceList.isEmpty()) {
+            ln.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.VISIBLE);
+        }
         deviceInfoAdapter = new DeviceInfoAdapter(NewDeviceActivity.this, newDeviceList);
         mNewDeviceList.setAdapter(deviceInfoAdapter);
     }
 
-    private void init() {
-        newDeviceList.add(new DeviceClass("192.168.0.22", "Crc_evans", "kkk", false));
-    }
-
     @OnClick(R.id.sub)
-    protected void submit(){
+    protected void save() {
+        db.deleteDeviceList();
+        for(int i=0;i<deviceInfoAdapter.mDeviceList.size();i++) {
+            if(deviceInfoAdapter.mDeviceList.get(i).ismChecked()==true) {
+                db.createNewDevice(new DeviceClass(deviceInfoAdapter.mDeviceList.get(i).getIp().trim(), deviceInfoAdapter.mDeviceList.get(i).getDevice().trim(), deviceInfoAdapter.mDeviceList.get(i).getOperation().trim(), deviceInfoAdapter.mDeviceList.get(i).ismChecked()));
+                System.out.println("Datas are " + deviceInfoAdapter.mDeviceList.get(i).getDevice());
+            }
+        }
+        finish();
+        startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
 
     }
     @OnClick(R.id.create)
     protected void Create() {
         newDeviceList.add(new DeviceClass("", "", "", false));
+        submit.setVisibility(View.VISIBLE);
         deviceInfoAdapter.notifyDataSetChanged();
     }
 

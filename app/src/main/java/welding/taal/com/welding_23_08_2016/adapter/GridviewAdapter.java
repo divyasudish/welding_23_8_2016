@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.activities.CalibrationMainActivity;
+import welding.taal.com.welding_23_08_2016.activities.DataLogActivity;
 import welding.taal.com.welding_23_08_2016.activities.DataLogMainActivity;
 import welding.taal.com.welding_23_08_2016.activities.DeviceSelectionActivity;
 import welding.taal.com.welding_23_08_2016.activities.MainMenuActivity;
@@ -87,7 +88,7 @@ public class GridviewAdapter extends BaseAdapter {
                     context.startActivity(mIntent);
                     break;
                 case "Data Log":
-                    mIntent = new Intent(context, DataLogMainActivity.class);
+                    mIntent = new Intent(context, DataLogActivity.class);
                     context.startActivity(mIntent);
                     break;
                 case "Torch Head Position":

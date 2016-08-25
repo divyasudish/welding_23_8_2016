@@ -68,7 +68,7 @@ public class ConnectionAdapter extends BaseAdapter {
                     final int position = v.getId();
                     final EditText Caption = (EditText) v;
                     try {
-                        mList.get(position).setmPort(Caption.getText().toString());
+                        mList.get(position).setmPort(Caption.getText().toString().trim());
                     } catch (Exception e) {
 
                     }

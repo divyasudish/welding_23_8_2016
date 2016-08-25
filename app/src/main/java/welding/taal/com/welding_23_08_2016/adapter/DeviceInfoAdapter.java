@@ -36,6 +36,7 @@ public class DeviceInfoAdapter extends BaseAdapter {
     private Intent mIntent;
     DatabaseHelper db;
     private List<String> list;
+    private List<String> operationList;
 
     public DeviceInfoAdapter(Context context, List<DeviceClass> list) {
         this.mDeviceList = list;
@@ -62,8 +63,15 @@ public class DeviceInfoAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(this.mContext).inflate(R.layout.list_new_device, null);
+            db = new DatabaseHelper(mContext);
             viewHolder = new ViewHolder();
-            viewHolder.data = new DataHolder(mContext);
+            if(!mDeviceList.get(position).getOperation().isEmpty()){
+                System.out.println("Innnnnnn" +mDeviceList.get(position).getOperation() );
+                viewHolder.data = new DataHolder(mContext,mDeviceList.get(position).getOperation().trim());
+            }
+            else {
+                viewHolder.data = new DataHolder(mContext,"");
+            }
             viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
             viewHolder.ip = (EditText) convertView.findViewById(R.id.ipValue);
             viewHolder.device = (EditText) convertView.findViewById(R.id.devicenameValue);
@@ -83,6 +91,7 @@ public class DeviceInfoAdapter extends BaseAdapter {
         //viewHolder.checkBox.setChecked(mDeviceList.get(position).ismChecked());
         viewHolder.ip.setText(mDeviceList.get(position).getIp());
         viewHolder.device.setText(mDeviceList.get(position).getDevice());
+
         viewHolder.spin.setAdapter(viewHolder.data.getAdapter());
         viewHolder.ip.setId(position);
         viewHolder.device.setId(position);
@@ -146,6 +155,7 @@ public class DeviceInfoAdapter extends BaseAdapter {
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.deleteDeviceName(mDeviceList.get(position).getDevice());
                 mDeviceList.remove(position);
                 notifyDataSetChanged();
             }

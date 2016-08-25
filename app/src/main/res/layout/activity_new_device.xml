@@ -22,13 +22,12 @@
         android:layout_marginTop="10dp"/>
     <Button
         android:id="@+id/create"
-        android:layout_width="65dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="10dp"
         android:textAllCaps="false"
-        android:text="Create"
         android:layout_toRightOf="@+id/title"
-        android:background="@drawable/custom_button"/>
+        android:background="@drawable/add"/>
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"

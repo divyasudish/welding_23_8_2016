@@ -3,6 +3,9 @@ package welding.taal.com.welding_23_08_2016.model;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import welding.taal.com.welding_23_08_2016.R;
 
 /**
@@ -11,14 +14,37 @@ import welding.taal.com.welding_23_08_2016.R;
 public class DeviceSelectionHolder {
 
     private int selected;
-    private ArrayAdapter<CharSequence> adapter;
+    private ArrayAdapter<String> adapter;
+    private List<String> operationList;
+    private List<String> newList;
+    private String op;
+    public DeviceSelectionHolder(Context parent, String operation) {
+        op = operation;
+        operationList = new ArrayList<String>();
+        newList = new ArrayList<>();
+        operationList.add("Group 1");
+        operationList.add("Group 2");
+        operationList.add("Group 3");
+        operationList.add("Group 4");
+        operationList.add("Group 5");
+        operationList.add("Group 6");
+        operationList.add("Group 7");
+        operationList.add("Group 8");
+        operationList.add("Group 9");
+        operationList.add("Group 10");
 
-    public DeviceSelectionHolder(Context parent) {
-        adapter = ArrayAdapter.createFromResource(parent, R.array.spinner_list_item_array, R.layout.spinner_text);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        for(int i = 0; i < operationList.size(); i++) {
+            if(op.trim().equals(operationList.get(i))){
+                newList.add(0,op);
+            }
+            else {
+                newList.add(operationList.get(i));
+            }
+        }
+        adapter = new ArrayAdapter<String>(parent, R.layout.spinner_text, newList);
     }
 
-    public ArrayAdapter<CharSequence> getAdapter() {
+    public ArrayAdapter<String> getAdapter() {
         return adapter;
     }
 

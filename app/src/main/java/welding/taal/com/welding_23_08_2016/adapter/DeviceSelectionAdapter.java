@@ -64,8 +64,15 @@ public class DeviceSelectionAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(this.mContext).inflate(R.layout.list_device_selection, null);
             viewHolder = new ViewHolder();
+            if(!mDeviceList.get(position).getGroup().isEmpty()){
+                System.out.println("Onnnnnn" +mDeviceList.get(position).getGroup());
+                viewHolder.data = new DeviceSelectionHolder(mContext,mDeviceList.get(position).getGroup().trim());
+            }
+            else {
+                viewHolder.data = new DeviceSelectionHolder(mContext,"");
+            }
+
             db = new DatabaseHelper(mContext);
-            viewHolder.data = new DeviceSelectionHolder(mContext);
             viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
             viewHolder.device = (TextView) convertView.findViewById(R.id.deviceNameVal);
             viewHolder.operation = (TextView) convertView.findViewById(R.id.operationVal);
@@ -83,7 +90,15 @@ public class DeviceSelectionAdapter extends BaseAdapter {
         });
         viewHolder.checkBox.setChecked(mDeviceList.get(position).ismChecked());
         viewHolder.operation.setText(mDeviceList.get(position).getOperation());
-        viewHolder.device.setText(Html.fromHtml(mDeviceList.get(position).getDevice() + "<sup>" + viewHolder.data.getSelected() + "</sup>"));
+        String x = mDeviceList.get(position).getGroup();
+        try {
+            System.out.println("sub string is " + x.substring(x.indexOf(" "), x.length()));
+        }
+        catch (Exception e) {
+
+        }
+        viewHolder.device.setText(mDeviceList.get(position).getDevice());
+        //viewHolder.device.setText(Html.fromHtml(mDeviceList.get(position).getDevice() + "<sup>" + x.substring(x.indexOf(" "), x.length()) + "</sup>"));
         viewHolder.spin.setAdapter(viewHolder.data.getAdapter());
 
         viewHolder.spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -91,9 +106,10 @@ public class DeviceSelectionAdapter extends BaseAdapter {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 viewHolder.data.setSelected(arg2);
+                System.out.println("View holder data " + viewHolder.data.getText() + "//" + mDeviceList.get(position).getDevice() + "//" + viewHolder.data.getSelected() + 1);
                 mDeviceList.get(position).setGroup(viewHolder.data.getText());
                 int x =  viewHolder.data.getSelected() + 1;
-                viewHolder.device.setText(Html.fromHtml(mDeviceList.get(position).getDevice() + "<sup>" + x + "</sup>"));
+                viewHolder.device.setText(Html.fromHtml(mDeviceList.get(position).getDevice() + "<sup>" + viewHolder.data.getText().substring(viewHolder.data.getText().indexOf(" "), viewHolder.data.getText().length()) + "</sup>"));
             }
 
             @Override

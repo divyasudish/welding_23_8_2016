@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.adapter.DeviceInfoAdapter;
 import welding.taal.com.welding_23_08_2016.adapter.DeviceSelectionAdapter;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
+import welding.taal.com.welding_23_08_2016.model.ConnectionClass;
 import welding.taal.com.welding_23_08_2016.model.DeviceClass;
 import welding.taal.com.welding_23_08_2016.model.DeviceSelectionClass;
 
@@ -37,9 +39,11 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     protected ListView mDeviceList;
     @Bind(R.id.linear)
     protected LinearLayout ln;
+    private boolean flag = false;
 
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<DeviceClass> newDeviceList;
+    private List<DeviceSelectionClass> mdeviceSelectionArrayList;
     private DeviceSelectionAdapter deviceSelectionAdapter;
     private DatabaseHelper db;
     @Override
@@ -51,7 +55,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
         deviceSelectionList = new ArrayList<>();
         newDeviceList = new ArrayList<>();
-
+        mdeviceSelectionArrayList = new ArrayList<>();
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         //window.setStatusBarColor(Color.BLACK);
@@ -82,12 +86,30 @@ public class DeviceSelectionActivity extends AppCompatActivity {
             ln.setVisibility(View.VISIBLE);
             mSave.setVisibility(View.VISIBLE);
         }
+        mdeviceSelectionArrayList = db.getAllDevices();
+
         for(int i = 0; i < newDeviceList.size(); i++) {
-            deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", newDeviceList.get(i).ismChecked()));
+            for(int j = 0; j < mdeviceSelectionArrayList.size(); j++) {
+                System.out.println("inside 2 for ");
+                if(newDeviceList.get(i).getDevice().equals(mdeviceSelectionArrayList.get(j).getDevice())) {
+                    deviceSelectionList.add(new DeviceSelectionClass(mdeviceSelectionArrayList.get(j).getDevice(), newDeviceList.get(i).getOperation(),mdeviceSelectionArrayList.get(j).getGroup(), mdeviceSelectionArrayList.get(j).ismChecked()));
+                    flag = true;
+                    break;
+                }
+                else {
+                    flag = false;
+                }
+            }
+            if(flag == false) {
+                deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", false));
+            }
         }
+
+//        for(int i = 0; i < newDeviceList.size(); i++) {
+//            deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", newDeviceList.get(i).ismChecked()));
+//        }
         deviceSelectionAdapter = new DeviceSelectionAdapter(DeviceSelectionActivity.this, deviceSelectionList);
         mDeviceList.setAdapter(deviceSelectionAdapter);
-
     }
     @OnClick(R.id.saveBut)
     protected void save() {
@@ -95,7 +117,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
             if(deviceSelectionAdapter.mDeviceList.get(i).ismChecked()==true) {
                 db.createDeviceSelection(new DeviceSelectionClass(deviceSelectionAdapter.mDeviceList.get(i).getDevice().trim(), deviceSelectionAdapter.mDeviceList.get(i).getOperation().trim(), deviceSelectionAdapter.mDeviceList.get(i).getGroup().trim(), deviceSelectionAdapter.mDeviceList.get(i).ismChecked()));
-                System.out.println("Datas are " + deviceSelectionAdapter.mDeviceList.get(i).getDevice());
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
             }
         }
     }

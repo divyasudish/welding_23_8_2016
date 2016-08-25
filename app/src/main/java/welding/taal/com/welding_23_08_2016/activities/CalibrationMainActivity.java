@@ -15,12 +15,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
@@ -29,31 +32,31 @@ import welding.taal.com.welding_23_08_2016.model.DeviceSelectionClass;
 
 @SuppressWarnings("deprecation")
 public class CalibrationMainActivity extends AppCompatActivity {
-
-    private String device;
-
+    @Bind(R.id.spinner)
+    protected Spinner spinner;
+    @Bind(R.id.tabLayout)
+    protected LinearLayout tabLayout;
     LocalActivityManager mlam;
     TabHost TabHostWindow;
-    private Spinner spinner;
     private DatabaseHelper db;
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<String> tablist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mlam = new LocalActivityManager(this, false);
         mlam.dispatchCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_torch_main);
+        setContentView(R.layout.activity_calibration_main);
         ButterKnife.bind(this);
         db = new DatabaseHelper(getApplicationContext());
         deviceSelectionList = new ArrayList<>();
         deviceSelectionList = db.getAllDevices();
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //window.setStatusBarColor(Color.BLACK);
         if ((Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT))
         {
-            //statusbar.setVisibility(View.VISIBLE);
+
         }
         else
         {
@@ -70,25 +73,13 @@ public class CalibrationMainActivity extends AppCompatActivity {
                 System.out.println(e.toString());
             }
         }
-        TabHostWindow = (TabHost)findViewById(android.R.id.tabhost);
-        TabHostWindow.setup(mlam);
-        TabHostWindow.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_spinner, menu);
-
-        MenuItem item = menu.findItem(R.id.spinner);
-        spinner = (Spinner) MenuItemCompat.getActionView(item);
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        TabHostWindow = (TabHost)findViewById(android.R.id.tabhost);
+        TabHostWindow.setup(mlam);
+        TabHostWindow.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -108,12 +99,17 @@ public class CalibrationMainActivity extends AppCompatActivity {
                 }
                 //Creating tab menu.
                 if(!tablist.isEmpty()) {
+                    tabLayout.setVisibility(View.VISIBLE);
                     for(int i = 0; i < tablist.size(); i++) {
                         TabHost.TabSpec TabMenu1 = TabHostWindow.newTabSpec(tablist.get(i));
                         TabMenu1.setIndicator(tablist.get(i));
                         TabMenu1.setContent(new Intent(getApplicationContext(), SensorActivity.class));
                         TabHostWindow.addTab(TabMenu1);
                     }
+                }
+                if(tablist.isEmpty()) {
+                    tabLayout.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getApplicationContext(), "No device", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -125,10 +121,14 @@ public class CalibrationMainActivity extends AppCompatActivity {
 
         });
 
-        spinner.setAdapter(adapter);
-        return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

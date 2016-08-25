@@ -97,8 +97,14 @@ public class NewDeviceActivity extends AppCompatActivity {
         db.deleteDeviceList();
         for(int i=0;i<deviceInfoAdapter.mDeviceList.size();i++) {
             if(deviceInfoAdapter.mDeviceList.get(i).ismChecked()==true) {
-                db.createNewDevice(new DeviceClass(deviceInfoAdapter.mDeviceList.get(i).getIp().trim(), deviceInfoAdapter.mDeviceList.get(i).getDevice().trim(), deviceInfoAdapter.mDeviceList.get(i).getOperation().trim(), deviceInfoAdapter.mDeviceList.get(i).ismChecked()));
-                System.out.println("Datas are " + deviceInfoAdapter.mDeviceList.get(i).getDevice());
+                if(!deviceInfoAdapter.mDeviceList.get(i).getDevice().isEmpty() && !deviceInfoAdapter.mDeviceList.get(i).getIp().isEmpty()){
+                    db.createNewDevice(new DeviceClass(deviceInfoAdapter.mDeviceList.get(i).getIp().trim(), deviceInfoAdapter.mDeviceList.get(i).getDevice().trim(), deviceInfoAdapter.mDeviceList.get(i).getOperation().trim(), deviceInfoAdapter.mDeviceList.get(i).ismChecked()));
+                    System.out.println("Datas are " + deviceInfoAdapter.mDeviceList.get(i).getDevice());
+                    Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Please enter device name or Ip", Toast.LENGTH_SHORT).show();
+                }
             }
         }
         finish();
@@ -107,7 +113,18 @@ public class NewDeviceActivity extends AppCompatActivity {
     }
     @OnClick(R.id.create)
     protected void Create() {
-        newDeviceList.add(new DeviceClass("", "", "", false));
+        boolean flag = true;
+        for(int i=0;i<deviceInfoAdapter.mDeviceList.size();i++) {
+            if(deviceInfoAdapter.mDeviceList.get(i).getDevice().equals("")){
+                flag = true;
+            }
+            else {
+                flag = false;
+            }
+        }
+        if(flag == false || deviceInfoAdapter.mDeviceList.isEmpty()) {
+            newDeviceList.add(new DeviceClass("", "", "", false));
+        }
         submit.setVisibility(View.VISIBLE);
         deviceInfoAdapter.notifyDataSetChanged();
     }

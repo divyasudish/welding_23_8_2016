@@ -1,9 +1,11 @@
 package welding.taal.com.welding_23_08_2016.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,13 +24,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import welding.taal.com.welding_23_08_2016.Connection.Connect;
+import welding.taal.com.welding_23_08_2016.Connection.ConnectConfiguration;
+import welding.taal.com.welding_23_08_2016.Connection.ConnectListener;
+import welding.taal.com.welding_23_08_2016.Connection.ConnectManager;
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.adapter.ConnectionAdapter;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
 import welding.taal.com.welding_23_08_2016.model.ConnectionClass;
 import welding.taal.com.welding_23_08_2016.model.DeviceClass;
 
-public class ConnectionActivity extends AppCompatActivity {
+public class ConnectionActivity extends AppCompatActivity implements ConnectListener {
     @Bind(R.id.connectBut)
     protected Button mConnect;
     @Bind(R.id.mainMenuBut)
@@ -41,6 +47,9 @@ public class ConnectionActivity extends AppCompatActivity {
     private List<ConnectionClass> mConnectionArrayList;
     private ConnectionAdapter connectionAdapter;
     private boolean flag = false;
+    private Connect connect;
+
+    public static final ConnectManager connectManager  = ConnectManager.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +150,13 @@ public class ConnectionActivity extends AppCompatActivity {
     }
     @OnClick(R.id.connectBut)
     protected void connection() {
-
+        for(int i=0;i<connectionAdapter.mList.size();i++) {
+            if (connectionAdapter.mList.get(i).ismCheckBox() == true) {
+                connect =  connectManager.createTcpClient(connectionAdapter.mList.get(i).getmIpAddress(), Integer.parseInt(connectionAdapter.mList.get(i).getmPort()), this);
+                //Toast.makeText(getApplicationContext(), connectionAdapter.mList.get(i).getmIpAddress() + ".." + connectionAdapter.mList.get(i).getmPort(), Toast.LENGTH_LONG).show();
+                db.createCon(new ConnectionClass(connectionAdapter.mList.get(i).ismCheckBox(), connectionAdapter.mList.get(i).getmIpAddress(), connectionAdapter.mList.get(i).getmPort()));
+            }
+        }
     }
     @OnClick(R.id.mainMenuBut)
     protected void mainMenu() {
@@ -152,7 +167,30 @@ public class ConnectionActivity extends AppCompatActivity {
                 System.out.println("Connection list are " + connectionAdapter.mList.get(i).getmIpAddress());
             }
         }
-
         startActivity(new Intent(ConnectionActivity.this, MainMenuActivity.class));
+    }
+
+    @Override
+    public void connectSuccess(ConnectConfiguration configuration) {
+        System.out.println("------------------>connectSuccess");
+        String x = "{ewe}";
+        connect.send(x.getBytes());
+        Toast.makeText(getApplicationContext(), "Connection success ", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void connectBreak(ConnectConfiguration configuration) {
+        System.out.println("------------------>connectBreak");
+    }
+    @Override
+    public void onReceviceData(ConnectConfiguration configuration, byte[] data) {
+        try {
+            String strMsg = new String(data, "UTF-8");
+            Toast.makeText(getApplicationContext(), strMsg, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(ConnectionActivity.this, MainMenuActivity.class));
+        }
+        catch (Exception e) {
+
+        }
     }
 }

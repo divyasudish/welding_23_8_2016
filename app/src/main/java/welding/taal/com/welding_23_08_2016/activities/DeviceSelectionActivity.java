@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     protected ListView mDeviceList;
     @Bind(R.id.linear)
     protected LinearLayout ln;
+    @Bind(R.id.selectCheck)
+    protected CheckBox chekAll;
     private boolean flag = false;
 
     private List<DeviceSelectionClass> deviceSelectionList;
@@ -85,6 +88,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         else if(!newDeviceList.isEmpty()) {
             ln.setVisibility(View.VISIBLE);
             mSave.setVisibility(View.VISIBLE);
+            chekAll.setVisibility(View.VISIBLE);
         }
         mdeviceSelectionArrayList = db.getAllDevices();
 
@@ -104,10 +108,23 @@ public class DeviceSelectionActivity extends AppCompatActivity {
                 deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", false));
             }
         }
-
-//        for(int i = 0; i < newDeviceList.size(); i++) {
-//            deviceSelectionList.add(new DeviceSelectionClass(newDeviceList.get(i).getDevice(), newDeviceList.get(i).getOperation(),"", newDeviceList.get(i).ismChecked()));
-//        }
+        chekAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox chk = (CheckBox) v;
+                if(chk.isChecked()) {
+                    for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
+                        deviceSelectionAdapter.mDeviceList.get(i).setmChecked(true);
+                    }
+                }
+                else {
+                    for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
+                        deviceSelectionAdapter.mDeviceList.get(i).setmChecked(false);
+                    }
+                }
+                deviceSelectionAdapter.notifyDataSetChanged();
+            }
+        });
         deviceSelectionAdapter = new DeviceSelectionAdapter(DeviceSelectionActivity.this, deviceSelectionList);
         mDeviceList.setAdapter(deviceSelectionAdapter);
     }
@@ -117,7 +134,9 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
             if(deviceSelectionAdapter.mDeviceList.get(i).ismChecked()==true) {
                 db.createDeviceSelection(new DeviceSelectionClass(deviceSelectionAdapter.mDeviceList.get(i).getDevice().trim(), deviceSelectionAdapter.mDeviceList.get(i).getOperation().trim(), deviceSelectionAdapter.mDeviceList.get(i).getGroup().trim(), deviceSelectionAdapter.mDeviceList.get(i).ismChecked()));
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                if(i == deviceSelectionAdapter.mDeviceList.size() - 1) {
+                    Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

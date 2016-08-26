@@ -43,9 +43,22 @@
     <ListView
         android:id="@+id/firmWareList"
         android:layout_width = "match_parent"
-        android:layout_height = "wrap_content"
+        android:layout_height = "280dp"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/rel"
         android:divider = "@null">
     </ListView>
+    <Button
+        android:id="@+id/upgradeBut"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Upgrade"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        android:layout_below="@+id/firmWareList"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/custom_button_bg_green" />
 </RelativeLayout>

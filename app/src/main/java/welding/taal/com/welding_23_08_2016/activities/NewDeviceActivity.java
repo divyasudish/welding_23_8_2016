@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +41,8 @@ public class NewDeviceActivity extends AppCompatActivity {
     protected ListView mNewDeviceList;
     @Bind(R.id.linear)
     protected LinearLayout ln;
+    @Bind(R.id.selectCheck)
+    protected CheckBox checkAll;
 
     private ArrayAdapter<String> adapter;
     private List<String> list;
@@ -46,9 +50,11 @@ public class NewDeviceActivity extends AppCompatActivity {
     private List<DeviceClass> newList;
     private Button createEdit;
     Boolean flag = false;
+    Boolean flag_checkAll = false;
 
     private List<DeviceClass> newDeviceList;
     private DeviceInfoAdapter deviceInfoAdapter;
+    private Matcher matcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +92,25 @@ public class NewDeviceActivity extends AppCompatActivity {
         }
         else if(!newDeviceList.isEmpty()) {
             ln.setVisibility(View.VISIBLE);
+            checkAll.setVisibility(View.VISIBLE);
             submit.setVisibility(View.VISIBLE);
         }
+        checkAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox chk = (CheckBox) v;
+                if (chk.isChecked()) {
+                    for (int i = 0; i < deviceInfoAdapter.mDeviceList.size(); i++) {
+                        deviceInfoAdapter.mDeviceList.get(i).setmChecked(true);
+                    }
+                } else {
+                    for (int i = 0; i < deviceInfoAdapter.mDeviceList.size(); i++) {
+                        deviceInfoAdapter.mDeviceList.get(i).setmChecked(false);
+                    }
+                }
+                deviceInfoAdapter.notifyDataSetChanged();
+            }
+        });
         deviceInfoAdapter = new DeviceInfoAdapter(NewDeviceActivity.this, newDeviceList);
         mNewDeviceList.setAdapter(deviceInfoAdapter);
     }
@@ -97,25 +120,47 @@ public class NewDeviceActivity extends AppCompatActivity {
         db.deleteDeviceList();
         for(int i=0;i<deviceInfoAdapter.mDeviceList.size();i++) {
             if(deviceInfoAdapter.mDeviceList.get(i).ismChecked()==true) {
-                if(!deviceInfoAdapter.mDeviceList.get(i).getDevice().isEmpty() && !deviceInfoAdapter.mDeviceList.get(i).getIp().isEmpty()){
-                    db.createNewDevice(new DeviceClass(deviceInfoAdapter.mDeviceList.get(i).getIp().trim(), deviceInfoAdapter.mDeviceList.get(i).getDevice().trim(), deviceInfoAdapter.mDeviceList.get(i).getOperation().trim(), deviceInfoAdapter.mDeviceList.get(i).ismChecked()));
-                    System.out.println("Datas are " + deviceInfoAdapter.mDeviceList.get(i).getDevice());
-                    Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
+                Pattern IP_ADDRESS = Pattern.compile(
+                        "((25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(25[0-5]|2[0-4]"
+                                + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]"
+                                + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
+                                + "|[1-9][0-9]|[0-9]))");
+                matcher = IP_ADDRESS.matcher(deviceInfoAdapter.mDeviceList.get(i).getIp().trim());
+                if (matcher.matches()) {
+                    if(!deviceInfoAdapter.mDeviceList.get(i).getDevice().isEmpty() && !deviceInfoAdapter.mDeviceList.get(i).getIp().isEmpty()){
+                        db.createNewDevice(new DeviceClass(deviceInfoAdapter.mDeviceList.get(i).getIp().trim(), deviceInfoAdapter.mDeviceList.get(i).getDevice().trim(), deviceInfoAdapter.mDeviceList.get(i).getOperation().trim(), deviceInfoAdapter.mDeviceList.get(i).ismChecked()));
+                        System.out.println("Datas are " + deviceInfoAdapter.mDeviceList.get(i).getDevice());
+                        if(i == deviceInfoAdapter.mDeviceList.size() - 1) {
+                            Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Please enter device name or Ip", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Please enter device name or Ip", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please enter valid ip", Toast.LENGTH_SHORT).show();
                 }
             }
         }
-        finish();
-        startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
+        if(!deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == true && matcher.matches()) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
+        }
+        else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
+            Toast.makeText(getApplicationContext(), "Please enter device details", Toast.LENGTH_SHORT).show();
+        }
+        else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
+            Toast.makeText(getApplicationContext(), "Please select checkbox", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
     @OnClick(R.id.create)
     protected void Create() {
         boolean flag = true;
         for(int i=0;i<deviceInfoAdapter.mDeviceList.size();i++) {
-            if(deviceInfoAdapter.mDeviceList.get(i).getDevice().equals("")){
+            if(deviceInfoAdapter.mDeviceList.get(i).getDevice().equals("")) {
                 flag = true;
             }
             else {
@@ -123,8 +168,14 @@ public class NewDeviceActivity extends AppCompatActivity {
             }
         }
         if(flag == false || deviceInfoAdapter.mDeviceList.isEmpty()) {
-            newDeviceList.add(new DeviceClass("", "", "", false));
+            if(checkAll.isChecked()) {
+                newDeviceList.add(new DeviceClass("", "", "", true));
+            }
+            else if(!checkAll.isChecked()) {
+                newDeviceList.add(new DeviceClass("", "", "", false));
+            }
         }
+        checkAll.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
         deviceInfoAdapter.notifyDataSetChanged();
     }

@@ -155,7 +155,8 @@ public class DeviceInfoAdapter extends BaseAdapter {
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.deleteDeviceName(mDeviceList.get(position).getDevice());
+                db.deleteDeviceName(mDeviceList.get(position).getIp());
+                db.deleteSelectedDeviceName(mDeviceList.get(position).getDevice());
                 mDeviceList.remove(position);
                 notifyDataSetChanged();
             }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
     protected Button mMainMenu;
     @Bind(R.id.connectionList)
     protected ListView mConnectionList;
+    @Bind(R.id.selectCheck)
+    protected CheckBox checkAll;
     private DatabaseHelper db;
     private List<ConnectionClass> mList;
     private List<DeviceClass> mNewDeviceList;
@@ -86,6 +89,7 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
         }
         if(!mNewDeviceList.isEmpty()) {
             mConnect.setVisibility(View.VISIBLE);
+            checkAll.setVisibility(View.VISIBLE);
         }
         System.out.println("Size " + mConnectionArrayList.size());
         for(int i = 0; i < mNewDeviceList.size(); i++) {
@@ -105,6 +109,23 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
             }
 
         }
+        checkAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox chk = (CheckBox) v;
+                if(chk.isChecked()) {
+                    for(int i=0;i<connectionAdapter.mList.size();i++) {
+                        connectionAdapter.mList.get(i).setmCheckBox(true);
+                    }
+                }
+                else {
+                    for(int i=0;i<connectionAdapter.mList.size();i++) {
+                        connectionAdapter.mList.get(i).setmCheckBox(false);
+                    }
+                }
+                connectionAdapter.notifyDataSetChanged();
+            }
+        });
         connectionAdapter = new ConnectionAdapter(ConnectionActivity.this, mList);
         mConnectionList.setAdapter(connectionAdapter);
     }

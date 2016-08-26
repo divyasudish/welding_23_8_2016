@@ -19,6 +19,7 @@ import welding.taal.com.welding_23_08_2016.activities.MainMenuActivity;
 import welding.taal.com.welding_23_08_2016.activities.NewDeviceActivity;
 import welding.taal.com.welding_23_08_2016.activities.TorchHeadPositonActivity;
 import welding.taal.com.welding_23_08_2016.activities.TorchMainActivity;
+import welding.taal.com.welding_23_08_2016.activities.UpgradeFirmwareActivity;
 
 /**
  * Created by divyashree_nair on 29/2/16.
@@ -99,9 +100,9 @@ public class GridviewAdapter extends BaseAdapter {
                     mIntent = new Intent(context, CalibrationMainActivity.class);
                     context.startActivity(mIntent);
                     break;
-//                case "Firmware Upgrade":
-//                    mIntent = new Intent(context, UpgradeFirmwareActivity.class);
-//                    context.startActivity(mIntent);
+                case "Firmware Upgrade":
+                    mIntent = new Intent(context, UpgradeFirmwareActivity.class);
+                    context.startActivity(mIntent);
 
                 default:
                     System.out.println("Else ");

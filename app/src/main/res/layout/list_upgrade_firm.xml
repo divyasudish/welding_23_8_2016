@@ -5,37 +5,47 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layout_marginTop="10dp">
         <CheckBox
             android:id="@+id/firmCheck"
-            android:layout_width="130dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:text=""
-            android:visibility="invisible"
             android:layout_marginBottom="4dp"
             android:buttonTint="#009688"
             android:textColor="#000" />
         <TextView
-            android:id="@+id/firmPath"
+            android:id="@+id/firmName"
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="normal"
             android:gravity="center"
             android:layout_marginTop="3dp"
             android:layout_toRightOf="@+id/firmCheck"/>
+        <TextView
+            android:id="@+id/firmPath"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:gravity="center"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@+id/firmName"/>
         <Button
             android:id="@+id/firmButton"
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:layout_toRightOf="@+id/firmPath"
             android:text="Browse"
-            android:visibility="invisible"
             android:textAllCaps="false"
             android:layout_marginTop="5dp"
+            android:textColor="#000000"
             android:background="@drawable/custom_button_teal"/>
     </RelativeLayout>
 </LinearLayout>

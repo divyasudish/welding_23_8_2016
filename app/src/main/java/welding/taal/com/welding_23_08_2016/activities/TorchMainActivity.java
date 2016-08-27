@@ -43,8 +43,8 @@ public class TorchMainActivity extends AppCompatActivity {
     protected Spinner spinner;
     @Bind(R.id.tabLayout)
     protected LinearLayout tableLayout;
-    LocalActivityManager mlam;
-    TabHost TabHostWindow;
+    private LocalActivityManager mlam;
+    private TabHost TabHostWindow;
     private DatabaseHelper db;
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<String> tablist;
@@ -125,11 +125,8 @@ public class TorchMainActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
 
             }
-
         });
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

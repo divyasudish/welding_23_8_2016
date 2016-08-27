@@ -36,8 +36,8 @@ public class CalibrationMainActivity extends AppCompatActivity {
     protected Spinner spinner;
     @Bind(R.id.tabLayout)
     protected LinearLayout tabLayout;
-    LocalActivityManager mlam;
-    TabHost TabHostWindow;
+    private LocalActivityManager mlam;
+    private TabHost TabHostWindow;
     private DatabaseHelper db;
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<String> tablist;
@@ -81,11 +81,9 @@ public class CalibrationMainActivity extends AppCompatActivity {
         TabHostWindow.setup(mlam);
         TabHostWindow.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-
                 int selectedPosition = arg2; //Here is your selected position
                 tablist =  new ArrayList<>();
                 TabHostWindow.getTabWidget().removeAllViews();

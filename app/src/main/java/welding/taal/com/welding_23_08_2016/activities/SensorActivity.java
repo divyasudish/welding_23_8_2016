@@ -72,14 +72,12 @@ public class SensorActivity extends Activity {
     protected TextView initial;
     @Bind(R.id.rel)
     protected RelativeLayout rel;
-
     private DatabaseHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor);
         ButterKnife.bind(this);
-
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if ((Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT))
@@ -102,8 +100,6 @@ public class SensorActivity extends Activity {
     public void onResume() {
         super.onResume();
     }
-
-
     @Override
     protected void onStart() {
         super.onStart();

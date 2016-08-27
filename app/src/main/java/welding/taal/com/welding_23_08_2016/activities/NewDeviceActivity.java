@@ -34,7 +34,7 @@ import welding.taal.com.welding_23_08_2016.model.DeviceClass;
 
 public class NewDeviceActivity extends AppCompatActivity {
     @Bind(R.id.sub)
-    protected Button submit;
+    public Button submit;
     @Bind(R.id.create)
     protected Button mCreate;
     @Bind(R.id.newDeviceList)
@@ -42,7 +42,7 @@ public class NewDeviceActivity extends AppCompatActivity {
     @Bind(R.id.linear)
     protected LinearLayout ln;
     @Bind(R.id.selectCheck)
-    protected CheckBox checkAll;
+    public CheckBox checkAll;
 
     private ArrayAdapter<String> adapter;
     private List<String> list;
@@ -114,7 +114,11 @@ public class NewDeviceActivity extends AppCompatActivity {
         deviceInfoAdapter = new DeviceInfoAdapter(NewDeviceActivity.this, newDeviceList);
         mNewDeviceList.setAdapter(deviceInfoAdapter);
     }
-
+    public void visibleMethod() {
+        checkAll.setVisibility(View.INVISIBLE);
+        submit.setVisibility(View.INVISIBLE);
+        ln.setVisibility(View.INVISIBLE);
+    }
     @OnClick(R.id.sub)
     protected void save() {
         db.deleteDeviceList();
@@ -143,18 +147,21 @@ public class NewDeviceActivity extends AppCompatActivity {
                 }
             }
         }
-        if(!deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == true && matcher.matches()) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
+        try {
+            if(!deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == true && matcher.matches()) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
+            }
+            else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
+                Toast.makeText(getApplicationContext(), "Please enter device details", Toast.LENGTH_SHORT).show();
+            }
+            else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
+                Toast.makeText(getApplicationContext(), "Please select checkbox", Toast.LENGTH_SHORT).show();
+            }
         }
-        else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).getDevice().isEmpty() && deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
-            Toast.makeText(getApplicationContext(), "Please enter device details", Toast.LENGTH_SHORT).show();
-        }
-        else if(deviceInfoAdapter.mDeviceList.get(deviceInfoAdapter.mDeviceList.size() - 1).ismChecked() == false) {
-            Toast.makeText(getApplicationContext(), "Please select checkbox", Toast.LENGTH_SHORT).show();
-        }
+        catch (Exception e) {
 
-
+        }
     }
     @OnClick(R.id.create)
     protected void Create() {
@@ -177,6 +184,7 @@ public class NewDeviceActivity extends AppCompatActivity {
         }
         checkAll.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
+        ln.setVisibility(View.VISIBLE);
         deviceInfoAdapter.notifyDataSetChanged();
     }
 

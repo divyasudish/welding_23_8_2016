@@ -28,9 +28,8 @@ public class MainMenuActivity extends AppCompatActivity {
     protected TextView help;
     @Bind(R.id.gridView)
     protected GridView mGridView;
-
     private String[] List={"New Device","Device Selection","Data Log","Torch Head Position","Calibration","Firmware Upgrade"};
-    int [] imageList = { R.drawable.new_device, R.drawable.device_selection, R.drawable.device_status, R.drawable.header_position, R.drawable.calibration, R.drawable.firmware};
+    private int [] imageList = { R.drawable.new_device, R.drawable.device_selection, R.drawable.device_status, R.drawable.header_position, R.drawable.calibration, R.drawable.firmware};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

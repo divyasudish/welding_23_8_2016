@@ -44,7 +44,6 @@ public class DataLogMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_log_part);
         ButterKnife.bind(this);
-
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         //window.setStatusBarColor(Color.BLACK);

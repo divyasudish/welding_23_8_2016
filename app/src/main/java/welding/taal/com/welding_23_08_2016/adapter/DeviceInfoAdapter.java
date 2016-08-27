@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import welding.taal.com.welding_23_08_2016.R;
+import welding.taal.com.welding_23_08_2016.activities.NewDeviceActivity;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
 import welding.taal.com.welding_23_08_2016.model.DataHolder;
 import welding.taal.com.welding_23_08_2016.model.DeviceClass;
@@ -155,10 +156,15 @@ public class DeviceInfoAdapter extends BaseAdapter {
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.deleteDeviceName(mDeviceList.get(position).getIp());
-                db.deleteSelectedDeviceName(mDeviceList.get(position).getDevice());
-                mDeviceList.remove(position);
-                notifyDataSetChanged();
+            db.deleteDeviceName(mDeviceList.get(position).getIp());
+            db.deleteSelectedDeviceName(mDeviceList.get(position).getDevice());
+            mDeviceList.remove(position);
+            notifyDataSetChanged();
+            if(mDeviceList.isEmpty()) {
+                if(mContext instanceof NewDeviceActivity){
+                    ((NewDeviceActivity)mContext).visibleMethod();
+                }
+            }
             }
         });
         try {

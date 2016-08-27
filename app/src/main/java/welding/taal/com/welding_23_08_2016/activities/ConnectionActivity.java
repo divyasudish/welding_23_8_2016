@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,6 +45,10 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
     protected ListView mConnectionList;
     @Bind(R.id.selectCheck)
     protected CheckBox checkAll;
+    @Bind(R.id.ipAddress)
+    protected TextView ipAddress;
+    @Bind(R.id.portNumber)
+    protected TextView portNumber;
     private DatabaseHelper db;
     private List<ConnectionClass> mList;
     private List<DeviceClass> mNewDeviceList;
@@ -90,6 +95,8 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
         if(!mNewDeviceList.isEmpty()) {
             mConnect.setVisibility(View.VISIBLE);
             checkAll.setVisibility(View.VISIBLE);
+            ipAddress.setVisibility(View.VISIBLE);
+            portNumber.setVisibility(View.VISIBLE);
         }
         System.out.println("Size " + mConnectionArrayList.size());
         for(int i = 0; i < mNewDeviceList.size(); i++) {

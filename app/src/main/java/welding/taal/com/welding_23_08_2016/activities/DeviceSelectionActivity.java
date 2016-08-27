@@ -43,7 +43,6 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     @Bind(R.id.selectCheck)
     protected CheckBox chekAll;
     private boolean flag = false;
-
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<DeviceClass> newDeviceList;
     private List<DeviceSelectionClass> mdeviceSelectionArrayList;

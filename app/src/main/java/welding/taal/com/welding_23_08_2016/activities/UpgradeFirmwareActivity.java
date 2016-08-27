@@ -38,7 +38,6 @@ import welding.taal.com.welding_23_08_2016.model.DeviceSelectionClass;
 import welding.taal.com.welding_23_08_2016.model.FirmwareClass;
 
 public class UpgradeFirmwareActivity extends AppCompatActivity {
-
     @Bind(R.id.firmWareList)
     protected ListView mListView;
     @Bind(R.id.spinner)
@@ -58,7 +57,6 @@ public class UpgradeFirmwareActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upgrade_firmware);
         ButterKnife.bind(this);
-
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if ((Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT))
@@ -81,21 +79,17 @@ public class UpgradeFirmwareActivity extends AppCompatActivity {
             }
         }
         databaseHelper = new DatabaseHelper(this);
-
         mList =  new ArrayList<DeviceSelectionClass>();
         mList = databaseHelper.getAllDevices();
         System.out.println("mList size is " + mList.size());
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-
                 int selectedPosition = arg2; //Here is your selected position
                 adapterList = new ArrayList<>();
                 System.out.println("selected position " + spin.getSelectedItem().toString());
@@ -112,11 +106,8 @@ public class UpgradeFirmwareActivity extends AppCompatActivity {
                     upgrade.setVisibility(View.VISIBLE);
                     firmwareAdapter = new FirmwareAdapter(UpgradeFirmwareActivity.this, adapterList);
                     mListView.setAdapter(firmwareAdapter);
-//                    for(int i = 0; i < adapterList.size(); i++) {
-//
-//                    }
                 }
-                if(adapterList.isEmpty()) {
+                else if(adapterList.isEmpty()) {
                     mListView.setVisibility(View.INVISIBLE);
                     upgrade.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(), "No device", Toast.LENGTH_SHORT).show();

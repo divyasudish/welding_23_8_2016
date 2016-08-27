@@ -28,7 +28,6 @@ public class FilePicker extends ListActivity {
     public final static String EXTRA_SHOW_HIDDEN_FILES = "show_hidden_files";
     public final static String EXTRA_ACCEPTED_FILE_EXTENSIONS = "accepted_file_extensions";
     private final static String DEFAULT_INITIAL_DIRECTORY = "/";
-
     protected File Directory;
     protected ArrayList<File> Files;
     protected FilePickerListAdapter Adapter;

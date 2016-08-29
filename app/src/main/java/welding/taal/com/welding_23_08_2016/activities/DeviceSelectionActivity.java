@@ -48,6 +48,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     private List<DeviceSelectionClass> mdeviceSelectionArrayList;
     private DeviceSelectionAdapter deviceSelectionAdapter;
     private DatabaseHelper db;
+    private boolean flag_save = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,10 +134,26 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         for(int i=0;i<deviceSelectionAdapter.mDeviceList.size();i++) {
             if(deviceSelectionAdapter.mDeviceList.get(i).ismChecked()==true) {
                 db.createDeviceSelection(new DeviceSelectionClass(deviceSelectionAdapter.mDeviceList.get(i).getDevice().trim(), deviceSelectionAdapter.mDeviceList.get(i).getOperation().trim(), deviceSelectionAdapter.mDeviceList.get(i).getGroup().trim(), deviceSelectionAdapter.mDeviceList.get(i).ismChecked()));
-                if(i == deviceSelectionAdapter.mDeviceList.size() - 1) {
-                    Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
-                }
+//                if(i == deviceSelectionAdapter.mDeviceList.size() - 1) {
+//                    Toast.makeText(getApplicationContext(), "Success" , Toast.LENGTH_SHORT).show();
+//                }
+                flag_save = false;
             }
+            else {
+                System.out.println("Hahah");
+                flag_save = true;
+            }
+        }
+        try {
+            if(flag_save == true) {
+                Toast.makeText(getApplicationContext(), "Please select checkbox ", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (Exception e) {
+
         }
     }
     @Override

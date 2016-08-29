@@ -42,6 +42,8 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     protected LinearLayout ln;
     @Bind(R.id.selectCheck)
     protected CheckBox chekAll;
+    @Bind(R.id.deviceSelectionScreenLayout)
+    protected LinearLayout deviceLayout;
     private boolean flag = false;
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<DeviceClass> newDeviceList;
@@ -86,7 +88,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No device in database", Toast.LENGTH_LONG).show();
         }
         else if(!newDeviceList.isEmpty()) {
-            ln.setVisibility(View.VISIBLE);
+            deviceLayout.setVisibility(View.VISIBLE);
             mSave.setVisibility(View.VISIBLE);
             chekAll.setVisibility(View.VISIBLE);
         }

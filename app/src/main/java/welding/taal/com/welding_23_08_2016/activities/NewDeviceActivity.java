@@ -43,6 +43,8 @@ public class NewDeviceActivity extends AppCompatActivity {
     protected LinearLayout ln;
     @Bind(R.id.selectCheck)
     public CheckBox checkAll;
+    @Bind(R.id.newDeviceScreenLayout)
+    protected LinearLayout newDeviceLayout;
 
     private ArrayAdapter<String> adapter;
     private List<String> list;
@@ -91,7 +93,7 @@ public class NewDeviceActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No device in database", Toast.LENGTH_LONG).show();
         }
         else if(!newDeviceList.isEmpty()) {
-            ln.setVisibility(View.VISIBLE);
+            newDeviceLayout.setVisibility(View.VISIBLE);
             checkAll.setVisibility(View.VISIBLE);
             submit.setVisibility(View.VISIBLE);
         }
@@ -117,7 +119,7 @@ public class NewDeviceActivity extends AppCompatActivity {
     public void visibleMethod() {
         checkAll.setVisibility(View.INVISIBLE);
         submit.setVisibility(View.INVISIBLE);
-        ln.setVisibility(View.INVISIBLE);
+        newDeviceLayout.setVisibility(View.INVISIBLE);
     }
     @OnClick(R.id.sub)
     protected void save() {
@@ -184,7 +186,7 @@ public class NewDeviceActivity extends AppCompatActivity {
         }
         checkAll.setVisibility(View.VISIBLE);
         submit.setVisibility(View.VISIBLE);
-        ln.setVisibility(View.VISIBLE);
+        newDeviceLayout.setVisibility(View.VISIBLE);
         deviceInfoAdapter.notifyDataSetChanged();
     }
 

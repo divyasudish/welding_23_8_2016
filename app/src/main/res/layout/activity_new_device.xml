@@ -50,7 +50,7 @@
         android:background="#9E9E9E"/>
     <LinearLayout
         android:id="@+id/newDeviceScreenLayout"
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_marginTop="12dp"

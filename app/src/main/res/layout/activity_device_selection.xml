@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,23 +29,21 @@
         android:buttonTint="#1B5E20"
         android:visibility="invisible"
         android:layout_marginLeft="8dp"
-        android:layout_below="@+id/title"
         android:layout_marginBottom="4dp"
         android:textColor="#000" />
     <View
         android:layout_width="350dp"
         android:layout_height="1dp"
-        android:layout_below="@+id/selectCheck"
         android:layout_marginTop="2dp"
         android:background="#9E9E9E"/>
     <LinearLayout
         android:id="@+id/deviceSelectionScreenLayout"
         android:layout_width="330dp"
-        android:layout_height="320dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_marginTop="12dp"
         android:visibility="invisible"
-        android:layout_below="@+id/selectCheck"
+        android:layout_weight="1"
         android:background="@drawable/edittext_border">
         <LinearLayout
             android:id="@+id/linear"
@@ -89,7 +87,6 @@
             android:id="@+id/deviceSelectionList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linear"
             android:layout_marginTop="10dp">
         </ListView>
     </LinearLayout>
@@ -103,6 +100,5 @@
         android:text="Save"
         android:visibility="invisible"
         android:layout_marginLeft="100dp"
-        android:layout_below="@+id/deviceSelectionScreenLayout"
         android:background="@drawable/custom_button"/>
-</RelativeLayout>
+</LinearLayout>

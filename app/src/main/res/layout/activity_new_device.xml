@@ -51,11 +51,12 @@
     <LinearLayout
         android:id="@+id/newDeviceScreenLayout"
         android:layout_width="330dp"
-        android:layout_height="340dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_marginTop="12dp"
         android:layout_marginLeft="10dp"
         android:visibility="invisible"
+        android:layout_weight="1"
         android:background="@drawable/edittext_border">
         <LinearLayout
             android:id="@+id/linear"

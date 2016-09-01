@@ -52,6 +52,16 @@ public class DeviceSelectionHolder {
         return (String) adapter.getItem(selected);
     }
 
+    public int getselectedPosition(String x) {
+        int pos = 0;
+        for(int i = 0; i < newList.size(); i++) {
+            if(newList.get(i).toString().equals(x.trim())){
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
     public int getSelected() {
         return selected;
     }

@@ -101,6 +101,9 @@ public class DeviceSelectionAdapter extends BaseAdapter {
         //viewHolder.device.setText(Html.fromHtml(mDeviceList.get(position).getDevice() + "<sup>" + x.substring(x.indexOf(" "), x.length()) + "</sup>"));
         viewHolder.spin.setAdapter(viewHolder.data.getAdapter());
 
+        int pos = viewHolder.data.getselectedPosition(mDeviceList.get(position).getGroup());
+        viewHolder.spin.setSelection(pos);
+
         viewHolder.spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -134,7 +137,7 @@ public class DeviceSelectionAdapter extends BaseAdapter {
             }
         });
         try {
-            viewHolder.spin.setSelection(viewHolder.data.getSelected());
+            //viewHolder.spin.setSelection(viewHolder.data.getSelected());
 
         }
         catch (Exception e) {

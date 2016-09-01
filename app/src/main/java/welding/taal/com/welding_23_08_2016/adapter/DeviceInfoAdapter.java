@@ -93,14 +93,20 @@ public class DeviceInfoAdapter extends BaseAdapter {
         viewHolder.ip.setText(mDeviceList.get(position).getIp());
         viewHolder.device.setText(mDeviceList.get(position).getDevice());
 
+        //viewHolder.spin.setSelection(viewHolder.data.getSelected());
+        System.out.println("selection spinner is " + mDeviceList.get(position).getOperation());
+
         viewHolder.spin.setAdapter(viewHolder.data.getAdapter());
         viewHolder.ip.setId(position);
         viewHolder.device.setId(position);
 
-        viewHolder.spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        int x = viewHolder.data.getselectedPosition(mDeviceList.get(position).getOperation());
+        viewHolder.spin.setSelection(x);
 
+        viewHolder.spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                //viewHolder.spin.setTag(position);
                 viewHolder.data.setSelected(arg2);
                 mDeviceList.get(position).setOperation(viewHolder.data.getText());
             }
@@ -168,7 +174,8 @@ public class DeviceInfoAdapter extends BaseAdapter {
             }
         });
         try {
-            viewHolder.spin.setSelection(viewHolder.data.getSelected());
+            //viewHolder.spin.setSelection(mDeviceList.get(position).getOperation().getS);
+            //viewHolder.spin.setSelection(viewHolder.data.getSelected());
 
         }
         catch (Exception e) {

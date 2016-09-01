@@ -84,12 +84,13 @@ public class DataLogActivity extends AppCompatActivity {
         TabHostWindow = (TabHost)findViewById(android.R.id.tabhost);
         TabHostWindow.setup(mlam);
         TabHostWindow.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
                 int selectedPosition = arg2; //Here is your selected position
-                tablist =  new ArrayList<>();
+                tablist = new ArrayList<>();
                 TabHostWindow.getTabWidget().removeAllViews();
                 System.out.println("selected position " + spinner.getSelectedItem().toString());
                 for (int i = 0; i < deviceSelectionList.size(); i++) {
@@ -100,18 +101,31 @@ public class DataLogActivity extends AppCompatActivity {
                     }
                 }
                 //Creating tab menu.
-                if(!tablist.isEmpty()) {
+                if (!tablist.isEmpty()) {
                     tabLayout.setVisibility(View.VISIBLE);
-                    for(int i = 0; i < tablist.size(); i++) {
+                    for (int i = 0; i < tablist.size(); i++) {
                         TabHost.TabSpec TabMenu1 = TabHostWindow.newTabSpec(tablist.get(i));
                         TabMenu1.setIndicator(tablist.get(i));
                         TabMenu1.setContent(new Intent(getApplicationContext(), DataLogMainActivity.class));
                         TabHostWindow.addTab(TabMenu1);
                     }
+                    TabHostWindow.setCurrentTab(0);
                 }
-                if(tablist.isEmpty()) {
+                if (tablist.isEmpty()) {
                     tabLayout.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(), "No device", Toast.LENGTH_SHORT).show();
+                }
+
+                for(int i=0;i < TabHostWindow.getTabWidget().getChildCount();i++)
+                {
+                    TabHostWindow.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#BCAAA4"));
+                }
+                try {
+                    TabHostWindow.getTabWidget().setCurrentTab(0);
+                    TabHostWindow.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#80CBC4"));
+                }
+                catch (Exception e) {
+
                 }
             }
 
@@ -122,9 +136,21 @@ public class DataLogActivity extends AppCompatActivity {
             }
 
         });
+        TabHostWindow.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                System.out.println("tab list size is " + tablist.size());
+                //TabHostWindow.getTabWidget().getChildAt(0).setSelected(false);
+                for(int i=0;i < TabHostWindow.getTabWidget().getChildCount();i++)
+                {
+                    TabHostWindow.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#BCAAA4"));
+                }
 
+                TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#80CBC4"));
+                System.out.println("Inside tab change listenre");
+            }
+        });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

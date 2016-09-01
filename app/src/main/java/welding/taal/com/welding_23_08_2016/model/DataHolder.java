@@ -49,6 +49,15 @@ public class DataHolder {
     public ArrayAdapter<String> getAdapter() {
         return adapter;
     }
+    public int getselectedPosition(String x) {
+        int pos = 0;
+        for(int i = 0; i < newList.size(); i++) {
+            if(newList.get(i).toString().equals(x.trim())){
+                pos = i;
+            }
+        }
+        return pos;
+    }
 
     public String getText() {
         return (String) adapter.getItem(selected);

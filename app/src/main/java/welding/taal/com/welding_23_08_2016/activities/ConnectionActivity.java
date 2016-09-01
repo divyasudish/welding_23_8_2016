@@ -175,7 +175,6 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
             //finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     @OnClick(R.id.connectBut)

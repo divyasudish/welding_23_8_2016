@@ -179,12 +179,17 @@ public class ConnectionActivity extends AppCompatActivity implements ConnectList
     }
     @OnClick(R.id.connectBut)
     protected void connection() {
-        for(int i=0;i<connectionAdapter.mList.size();i++) {
-            if (connectionAdapter.mList.get(i).ismCheckBox() == true) {
-                connect =  connectManager.createTcpClient(connectionAdapter.mList.get(i).getmIpAddress(), Integer.parseInt(connectionAdapter.mList.get(i).getmPort()), this);
-                //Toast.makeText(getApplicationContext(), connectionAdapter.mList.get(i).getmIpAddress() + ".." + connectionAdapter.mList.get(i).getmPort(), Toast.LENGTH_LONG).show();
-                db.createCon(new ConnectionClass(connectionAdapter.mList.get(i).ismCheckBox(), connectionAdapter.mList.get(i).getmIpAddress(), connectionAdapter.mList.get(i).getmPort()));
+        try {
+            for(int i=0;i<connectionAdapter.mList.size();i++) {
+                if (connectionAdapter.mList.get(i).ismCheckBox() == true) {
+                    connect =  connectManager.createTcpClient(connectionAdapter.mList.get(i).getmIpAddress(), Integer.parseInt(connectionAdapter.mList.get(i).getmPort()), this);
+                    //Toast.makeText(getApplicationContext(), connectionAdapter.mList.get(i).getmIpAddress() + ".." + connectionAdapter.mList.get(i).getmPort(), Toast.LENGTH_LONG).show();
+                    db.createCon(new ConnectionClass(connectionAdapter.mList.get(i).ismCheckBox(), connectionAdapter.mList.get(i).getmIpAddress(), connectionAdapter.mList.get(i).getmPort()));
+                }
             }
+        }
+        catch (Exception e) {
+
         }
     }
     @OnClick(R.id.mainMenuBut)

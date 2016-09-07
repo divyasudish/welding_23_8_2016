@@ -122,7 +122,7 @@ public class DataLogActivity extends AppCompatActivity {
                 }
                 try {
                     TabHostWindow.getTabWidget().setCurrentTab(0);
-                    TabHostWindow.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#80CBC4"));
+                    TabHostWindow.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#8C9EFF"));
                 }
                 catch (Exception e) {
 
@@ -146,7 +146,7 @@ public class DataLogActivity extends AppCompatActivity {
                     TabHostWindow.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#BCAAA4"));
                 }
 
-                TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#80CBC4"));
+                TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#8C9EFF"));
                 System.out.println("Inside tab change listenre");
             }
         });

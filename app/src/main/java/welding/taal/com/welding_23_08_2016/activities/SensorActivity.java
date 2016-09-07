@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
+import welding.taal.com.welding_23_08_2016.model.GearBoxClass;
 
 public class SensorActivity extends Activity {
     @Bind(R.id.SetForwordHome)
@@ -58,12 +62,6 @@ public class SensorActivity extends Activity {
     protected TextView magY;
     @Bind(R.id.magZ)
     protected TextView magZ;
-    @Bind(R.id.gbrText)
-    protected TextView gear;
-    @Bind(R.id.bracketText)
-    protected TextView band;
-    @Bind(R.id.gearText)
-    protected TextView wheel;
     @Bind(R.id.goHomeText)
     protected TextView homeText;
     @Bind(R.id.calbrate)
@@ -72,7 +70,15 @@ public class SensorActivity extends Activity {
     protected TextView initial;
     @Bind(R.id.rel)
     protected RelativeLayout rel;
-    private DatabaseHelper db;
+    public static DatabaseHelper db;
+    private Intent intent;
+    private static String mDevice;
+    public static List<GearBoxClass> mListGear;
+    public static Handler UIHandler;
+    private static TextView gear;
+    private static TextView band;
+    private static TextView wheel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,23 +95,117 @@ public class SensorActivity extends Activity {
             window.setStatusBarColor(Color.BLACK);
         }
         rel.setVisibility(View.VISIBLE);
+        mDevice = getIntent().getStringExtra("Device");
+        System.out.println("device nam before gear box" + mDevice);
+        db = new DatabaseHelper(getApplicationContext());
+        UIHandler = new Handler(Looper.getMainLooper());
+        mListGear = db.getAllGearBoxes();
+        gear = (TextView) findViewById(R.id.gbrText);
+        band = (TextView) findViewById(R.id.bracketText);
+        wheel = (TextView) findViewById(R.id.gearText);
+        try{
+            if(!mListGear.isEmpty()) {
+                for(int i = 0; i < mListGear.size(); i++) {
+                    if(mListGear.get(i).getDeviceNmae().equals(mDevice)) {
+                        System.out.println("device nam before gear box" + mDevice);
+                        gear.setText(mListGear.get(i).getGbr());
+                        band.setText(mListGear.get(i).getBandDia());
+                        wheel.setText(mListGear.get(i).getGearwheelDia());
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
 
+    }
+    @OnClick(R.id.Gyro)
+    protected void gearbox() {
+        intent = new Intent(SensorActivity.this, Motor_GairBoxActivity.class);
+        System.out.println("device nam " + mDevice);
+        intent.putExtra("Device", mDevice);
+        startActivity(intent);
     }
 
     @Override
     protected void onPause() {
+        System.out.println("Inside pause thread");
         super.onPause();
     }
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        System.out.println("Inside restart thread");
+        super.onRestart();
+    }
+    @Override
+    protected void onStop() {
+        System.out.println("Inside stop thread");
+        super.onStop();
     }
     @Override
     protected void onStart() {
+        System.out.println("Inside start thread ffgggg");
         super.onStart();
     }
     @Override
+    protected void onResume() {
+        Log.d("ChangeStateInfo", "onResume");
+        super.onResume();
+    }
+
+    public static void refresh(final String dev) {
+        UIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mListGear = db.getAllGearBoxes();
+                    System.out.println("Inside resume thread fhhfh");
+                    if (!mListGear.isEmpty()) {
+                        System.out.println("Inside resume thread iii" + dev);
+                        mDevice = dev;
+                        for (int i = 0; i < mListGear.size(); i++) {
+                            if (mListGear.get(i).getDeviceNmae().equals(dev)) {
+                                gear.setText(mListGear.get(i).getGbr());
+                                band.setText(mListGear.get(i).getBandDia());
+                                wheel.setText(mListGear.get(i).getGearwheelDia());
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
+
+                }
+
+            }
+        });
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    mListGear = db.getAllGearBoxes();
+//                    System.out.println("Inside resume thread fhhfh");
+//                    if (!mListGear.isEmpty()) {
+//                        System.out.println("Inside resume thread iii");
+//                        for (int i = 0; i < mListGear.size(); i++) {
+//
+//                            if (mListGear.get(i).getDeviceNmae().equals(mDevice)) {
+//                                gear.setText(mListGear.get(i).getGbr());
+//                                band.setText(mListGear.get(i).getBandDia());
+//                                wheel.setText(mListGear.get(i).getGearwheelDia());
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//        });
+    }
+
+    @Override
     protected void onDestroy() {
+        System.out.println("Inside destroy thread");
         super.onDestroy();
     }
 }

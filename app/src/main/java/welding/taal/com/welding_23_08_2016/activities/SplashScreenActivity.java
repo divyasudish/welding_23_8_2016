@@ -40,8 +40,8 @@ public class SplashScreenActivity extends Activity {
             @Override
             protected Void doInBackground(Void... params) {
                 try{
-                    Thread.sleep(4000);
-                } catch (Exception e){
+                    Thread.sleep(3000);
+                } catch (Exception e) {
 
                 }
                 return null;

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import butterknife.ButterKnife;
 import welding.taal.com.welding_23_08_2016.R;
 import welding.taal.com.welding_23_08_2016.database.DatabaseHelper;
 import welding.taal.com.welding_23_08_2016.model.DeviceSelectionClass;
+import welding.taal.com.welding_23_08_2016.model.GearBoxClass;
 
 
 @SuppressWarnings("deprecation")
@@ -41,7 +44,9 @@ public class CalibrationMainActivity extends AppCompatActivity {
     private DatabaseHelper db;
     private List<DeviceSelectionClass> deviceSelectionList;
     private List<String> tablist;
-
+    private Intent intent;
+    private String deviceName;
+    private List<GearBoxClass> mListGear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mlam = new LocalActivityManager(this, false);
@@ -52,6 +57,7 @@ public class CalibrationMainActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
         deviceSelectionList = new ArrayList<>();
         deviceSelectionList = db.getAllDevices();
+        mListGear = db.getAllGearBoxes();
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if ((Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH) || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT))
@@ -101,7 +107,11 @@ public class CalibrationMainActivity extends AppCompatActivity {
                     for (int i = 0; i < tablist.size(); i++) {
                         TabHost.TabSpec TabMenu1 = TabHostWindow.newTabSpec(tablist.get(i));
                         TabMenu1.setIndicator(tablist.get(i));
-                        TabMenu1.setContent(new Intent(getApplicationContext(), SensorActivity.class));
+                        deviceName = tablist.get(i);
+                        System.out.println("device naminside  ");
+                        intent = new Intent(getApplicationContext(), SensorActivity.class);
+                        intent.putExtra("Device", tablist.get(i));
+                        TabMenu1.setContent(intent);
                         TabHostWindow.addTab(TabMenu1);
                     }
                 }
@@ -114,7 +124,7 @@ public class CalibrationMainActivity extends AppCompatActivity {
                 }
                 try {
                     TabHostWindow.getTabWidget().setCurrentTab(0);
-                    TabHostWindow.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#80CBC4"));
+                    TabHostWindow.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#8C9EFF"));
                 } catch (Exception e) {
 
                 }
@@ -133,11 +143,52 @@ public class CalibrationMainActivity extends AppCompatActivity {
                 for (int i = 0; i < TabHostWindow.getTabWidget().getChildCount(); i++) {
                     TabHostWindow.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#BCAAA4"));
                 }
-
-                TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#80CBC4"));
+                TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#8C9EFF"));
                 System.out.println("Inside tab change listenre");
             }
         });
+    }
+    @Override
+    protected void onRestart() {
+        System.out.println("Inside restart thread calib");
+        super.onRestart();
+    }
+    @Override
+    protected void onStop() {
+        System.out.println("Inside stop thread calib");
+        super.onStop();
+    }
+    @Override
+    protected void onStart() {
+        System.out.println("Inside start thread calib");
+        super.onStart();
+    }
+    @Override
+    protected void onResume() {
+        Log.d("ChangeStateInfo", "onResume calib");
+        super.onResume();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        System.out.println("before refresh");
+                        try {
+                            TextView tv = (TextView) TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).findViewById(android.R.id.title);
+                            System.out.println("Hello " + tv.getText());
+                            SensorActivity.refresh(tv.getText().toString());
+                        }
+                        catch (Exception e) {
+
+                        }
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        t.start();
     }
 
     @Override

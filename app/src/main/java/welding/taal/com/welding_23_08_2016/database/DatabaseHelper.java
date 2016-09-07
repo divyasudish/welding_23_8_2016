@@ -13,6 +13,7 @@ import java.util.List;
 import welding.taal.com.welding_23_08_2016.model.ConnectionClass;
 import welding.taal.com.welding_23_08_2016.model.DeviceClass;
 import welding.taal.com.welding_23_08_2016.model.DeviceSelectionClass;
+import welding.taal.com.welding_23_08_2016.model.GearBoxClass;
 import welding.taal.com.welding_23_08_2016.model.RegistrationClass;
 
 /**
@@ -22,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     // Database Name
     private static final String DATABASE_NAME = "Welding";
 
@@ -53,6 +54,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DEVICE_SELECTION_GROUP = "device_slection_group";
     private static final String DEVICE_SELECTION_STATE = "device_selection_state";
 
+    private static final String TABLE_GEARBOX = "GearBox";
+    private static final String KEY_GEARBOX_ID = "gearBox_id";
+    private static final String KEY_Gear_DEVICE_NAME = "deviceName";
+    private static final String KEY_band_id = "bandId";
+    private static final String KEY_band_od = "bandOd";
+    private static final String KEY_band_md = "bandMd";
+    private static final String KEY_pipe_id = "pipeId";
+    private static final String KEY_pipe_od = "pipeOd";
+    private static final String KEY_pipe_md = "pipeMd";
+    private static final String KEY_GEARBOX_RATIO = "gbr";
+    private static final String KEY_BAND_DIA = "band_dia";
+    private static final String KEY_GEAR_WHEEL_DIA = "gear_wheel_dia";
+
 
     private static final String CREATE_TABLE_REGISTRATION = "CREATE TABLE "
             + TABLE_REG + "(" + KEY_REG_ID + " INTEGER PRIMARY KEY," + KEY_REG_NAME + " TEXT," + KEY_REG_USERNAME
@@ -71,6 +85,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_DEVICE_DEVICE_SELECTION + "(" + KEY_DEVICE_SELECTION_ID + " INTEGER PRIMARY KEY," + KEY_DEVICE_SELECTION_NAME + " TEXT," + DEVICE_SELECTION_OPERATION + " TEXT," +
             DEVICE_SELECTION_GROUP + " TEXT," + DEVICE_SELECTION_STATE  + " flag INTEGER DEFAULT 0" + ")";
 
+    private static final String CREATE_TABLE_GEARBOX = "CREATE TABLE "
+            + TABLE_GEARBOX + "(" + KEY_GEARBOX_ID + " INTEGER PRIMARY KEY," + KEY_Gear_DEVICE_NAME + " TEXT," + KEY_band_id + " TEXT," +
+            KEY_band_od + " TEXT," + KEY_band_md + " TEXT," + KEY_pipe_id + " TEXT," +
+            KEY_pipe_od + " TEXT," + KEY_pipe_md + " TEXT," + KEY_GEARBOX_RATIO + " TEXT," +
+            KEY_BAND_DIA + " TEXT," + KEY_GEAR_WHEEL_DIA + " TEXT" + ")";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -81,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CONNECTION);
         db.execSQL(CREATE_TABLE_NEW_DEVICE);
         db.execSQL(CREATE_TABLE_DEVICE_SELECTION);
+        db.execSQL(CREATE_TABLE_GEARBOX);
     }
 
     @Override
@@ -89,6 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONNECTION);
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_DEVICE_NEW);
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_DEVICE_DEVICE_SELECTION);
+        db.execSQL("DROP TABLE IF EXISTS" + TABLE_GEARBOX);
         onCreate(db);
     }
 
@@ -360,5 +382,87 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_DEVICE_DEVICE_SELECTION, null, null);
         System.out.println("Delete selected devices successfully ");
+    }
+
+    public void createGearBox(GearBoxClass todo) {
+        Boolean flag = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_Gear_DEVICE_NAME, todo.getDeviceNmae());
+        values.put(KEY_band_id, todo.getBandId());
+        values.put(KEY_band_od, todo.getBandOd());
+        values.put(KEY_band_md, todo.getBandMd());
+        values.put(KEY_pipe_id, todo.getPipeId());
+        values.put(KEY_pipe_od, todo.getPipeOd());
+        values.put(KEY_pipe_md, todo.getPipeMd());
+        values.put(KEY_GEARBOX_RATIO, todo.getGbr());
+        values.put(KEY_BAND_DIA, todo.getBandDia());
+        values.put(KEY_GEAR_WHEEL_DIA, todo.getGearwheelDia());
+
+
+        // insert row
+        db.insert(TABLE_GEARBOX, null, values);
+        List<GearBoxClass> list = getAllGearBoxes();
+        for(int i = 0; i < list.size(); i++){
+            if(!list.isEmpty()){
+                if(list.get(i).getDeviceNmae().trim().equals(todo.getDeviceNmae().trim())){
+                    flag = true;
+                    break;
+                }
+                else{
+                    flag = false;
+                }
+            }
+        }
+        if(flag == false) {
+            db.insert(TABLE_GEARBOX, null, values);
+        }
+        if(flag == true) {
+            deleteGearBox(todo.getDeviceNmae().trim());
+            db.insert(TABLE_GEARBOX, null, values);
+        }
+
+        System.out.println("successfully" + todo.getDeviceNmae());
+        System.out.println("successfully");
+    }
+
+    public List<GearBoxClass> getAllGearBoxes() {
+        List<GearBoxClass> todos = new ArrayList<GearBoxClass>();
+        String selectQuery = "SELECT  * FROM " + TABLE_GEARBOX;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                GearBoxClass td = new GearBoxClass();
+                td.setId(c.getInt((c.getColumnIndex(KEY_GEARBOX_ID))));
+                td.setDeviceNmae((c.getString(c.getColumnIndex(KEY_Gear_DEVICE_NAME))));
+                td.setBandId(c.getString(c.getColumnIndex(KEY_band_id)));
+                td.setBandOd(c.getString(c.getColumnIndex(KEY_band_od)));
+                td.setBandMd(c.getString(c.getColumnIndex(KEY_band_md)));
+                td.setPipeId(c.getString(c.getColumnIndex(KEY_pipe_id)));
+                td.setPipeOd(c.getString(c.getColumnIndex(KEY_pipe_od)));
+                td.setPipeMd(c.getString(c.getColumnIndex(KEY_pipe_md)));
+                td.setGbr(c.getString(c.getColumnIndex(KEY_GEARBOX_RATIO)));
+                td.setBandDia(c.getString(c.getColumnIndex(KEY_BAND_DIA)));
+                td.setGearwheelDia(c.getString(c.getColumnIndex(KEY_GEAR_WHEEL_DIA)));
+                todos.add(td);
+            } while (c.moveToNext());
+        }
+
+        return todos;
+    }
+
+    public void deleteGearBox(String st) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_GEARBOX,
+                KEY_Gear_DEVICE_NAME + " = ?",
+                new String[]{st});
+        System.out.println("Delete device name successfully " + st);
     }
 }

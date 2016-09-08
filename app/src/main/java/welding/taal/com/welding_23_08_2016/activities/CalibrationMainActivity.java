@@ -1,5 +1,6 @@
 package welding.taal.com.welding_23_08_2016.activities;
 
+import android.app.Activity;
 import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
@@ -47,9 +48,10 @@ public class CalibrationMainActivity extends AppCompatActivity {
     private Intent intent;
     private String deviceName;
     private List<GearBoxClass> mListGear;
+    public static String devname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mlam = new LocalActivityManager(this, false);
+        mlam = new LocalActivityManager(this, true);
         mlam.dispatchCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration_main);
@@ -109,8 +111,8 @@ public class CalibrationMainActivity extends AppCompatActivity {
                         TabMenu1.setIndicator(tablist.get(i));
                         deviceName = tablist.get(i);
                         System.out.println("device naminside  ");
-                        intent = new Intent(getApplicationContext(), SensorActivity.class);
-                        intent.putExtra("Device", tablist.get(i));
+                        Intent intent = new Intent().setClass(getApplicationContext(), SensorActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         TabMenu1.setContent(intent);
                         TabHostWindow.addTab(TabMenu1);
                     }
@@ -138,11 +140,14 @@ public class CalibrationMainActivity extends AppCompatActivity {
         TabHostWindow.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
+                mlam.dispatchResume();
                 System.out.println("tab list size is " + tablist.size());
                 //TabHostWindow.getTabWidget().getChildAt(0).setSelected(false);
                 for (int i = 0; i < TabHostWindow.getTabWidget().getChildCount(); i++) {
                     TabHostWindow.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#BCAAA4"));
                 }
+                TextView tv = (TextView) TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).findViewById(android.R.id.title);
+                devname = tv.getText().toString();
                 TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).setBackgroundColor(Color.parseColor("#8C9EFF"));
                 System.out.println("Inside tab change listenre");
             }
@@ -167,28 +172,7 @@ public class CalibrationMainActivity extends AppCompatActivity {
     protected void onResume() {
         Log.d("ChangeStateInfo", "onResume calib");
         super.onResume();
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        System.out.println("before refresh");
-                        try {
-                            TextView tv = (TextView) TabHostWindow.getTabWidget().getChildAt(TabHostWindow.getCurrentTab()).findViewById(android.R.id.title);
-                            System.out.println("Hello " + tv.getText());
-                            SensorActivity.refresh(tv.getText().toString());
-                        }
-                        catch (Exception e) {
-
-                        }
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
-
-        t.start();
+        mlam.dispatchResume();
     }
 
     @Override

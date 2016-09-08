@@ -78,6 +78,7 @@ public class SensorActivity extends Activity {
     private static TextView gear;
     private static TextView band;
     private static TextView wheel;
+    private static int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,37 +96,26 @@ public class SensorActivity extends Activity {
             window.setStatusBarColor(Color.BLACK);
         }
         rel.setVisibility(View.VISIBLE);
-        mDevice = getIntent().getStringExtra("Device");
-        System.out.println("device nam before gear box" + mDevice);
         db = new DatabaseHelper(getApplicationContext());
         UIHandler = new Handler(Looper.getMainLooper());
-        mListGear = db.getAllGearBoxes();
+        try {
+            mListGear = db.getAllGearBoxes();
+        }
+        catch (Exception e) {
+
+        }
         gear = (TextView) findViewById(R.id.gbrText);
         band = (TextView) findViewById(R.id.bracketText);
         wheel = (TextView) findViewById(R.id.gearText);
-        try{
-            if(!mListGear.isEmpty()) {
-                for(int i = 0; i < mListGear.size(); i++) {
-                    if(mListGear.get(i).getDeviceNmae().equals(mDevice)) {
-                        System.out.println("device nam before gear box" + mDevice);
-                        gear.setText(mListGear.get(i).getGbr());
-                        band.setText(mListGear.get(i).getBandDia());
-                        wheel.setText(mListGear.get(i).getGearwheelDia());
-                    }
-                }
-            }
-        }
-        catch (Exception e){
-            System.out.println(e.toString());
-        }
-
+        gear.setText("0");
+        band.setText("0");
+        wheel.setText("0");
     }
     @OnClick(R.id.Gyro)
     protected void gearbox() {
-        intent = new Intent(SensorActivity.this, Motor_GairBoxActivity.class);
-        System.out.println("device nam " + mDevice);
-        intent.putExtra("Device", mDevice);
-        startActivity(intent);
+        Intent i = new Intent(this,  Motor_GairBoxActivity.class);
+        i.putExtra("Device", mDevice);
+        startActivity(i);
     }
 
     @Override
@@ -152,55 +142,49 @@ public class SensorActivity extends Activity {
     protected void onResume() {
         Log.d("ChangeStateInfo", "onResume");
         super.onResume();
-    }
-
-    public static void refresh(final String dev) {
-        UIHandler.post(new Runnable() {
+        Thread t = new Thread() {
             @Override
             public void run() {
                 try {
-                    mListGear = db.getAllGearBoxes();
-                    System.out.println("Inside resume thread fhhfh");
-                    if (!mListGear.isEmpty()) {
-                        System.out.println("Inside resume thread iii" + dev);
-                        mDevice = dev;
-                        for (int i = 0; i < mListGear.size(); i++) {
-                            if (mListGear.get(i).getDeviceNmae().equals(dev)) {
-                                gear.setText(mListGear.get(i).getGbr());
-                                band.setText(mListGear.get(i).getBandDia());
-                                wheel.setText(mListGear.get(i).getGearwheelDia());
-                            }
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        System.out.println("before refresh");
+                        try {
+                            UIHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        mListGear = db.getAllGearBoxes();
+                                        if (!mListGear.isEmpty()) {
+                                            mDevice = CalibrationMainActivity.devname;
+                                            System.out.println("Inside resume thread iii" + mDevice);
+                                            for (int i = 0; i < mListGear.size(); i++) {
+                                                if (mListGear.get(i).getDeviceNmae().equals(mDevice)) {
+                                                    System.out.println("Inside for " + mListGear.get(i).getDeviceNmae() + "//" + mDevice + "//" + mListGear.get(i).getGbr());
+                                                    System.out.println("Inside for display" + mListGear.get(i).getDeviceNmae() + "../" + mDevice + ".../" + mListGear.get(i).getGbr());
+                                                    gear.setText(mListGear.get(i).getGbr());
+                                                    band.setText(mListGear.get(i).getBandDia());
+                                                    wheel.setText(mListGear.get(i).getGearwheelDia());
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            });
+                        }
+                        catch (Exception e) {
+
                         }
                     }
+                } catch (InterruptedException e) {
                 }
-                catch (Exception e) {
-
-                }
-
             }
-        });
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    mListGear = db.getAllGearBoxes();
-//                    System.out.println("Inside resume thread fhhfh");
-//                    if (!mListGear.isEmpty()) {
-//                        System.out.println("Inside resume thread iii");
-//                        for (int i = 0; i < mListGear.size(); i++) {
-//
-//                            if (mListGear.get(i).getDeviceNmae().equals(mDevice)) {
-//                                gear.setText(mListGear.get(i).getGbr());
-//                                band.setText(mListGear.get(i).getBandDia());
-//                                wheel.setText(mListGear.get(i).getGearwheelDia());
-//                            }
-//                        }
-//                    }
-//                } catch (Exception e) {
-//
-//                }
-//            }
-//        });
+        };
+
+        t.start();
     }
 
     @Override

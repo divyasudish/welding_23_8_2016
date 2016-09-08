@@ -164,6 +164,7 @@ public class DeviceInfoAdapter extends BaseAdapter {
             public void onClick(View v) {
             db.deleteDeviceName(mDeviceList.get(position).getIp());
             db.deleteSelectedDeviceName(mDeviceList.get(position).getDevice());
+            db.deleteGearBox(mDeviceList.get(position).getDevice());
             mDeviceList.remove(position);
             notifyDataSetChanged();
             if(mDeviceList.isEmpty()) {

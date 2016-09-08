@@ -93,7 +93,8 @@ public class Motor_GairBoxActivity extends AppCompatActivity {
             }
         }
         db = new DatabaseHelper(getApplicationContext());
-        mDevice = getIntent().getStringExtra("Device");
+        //mDevice = getIntent().getStringExtra("Device");
+        mDevice = CalibrationMainActivity.devname;
         System.out.println("Device name " + mDevice);
         if(!mDevice.isEmpty()) {
             deviceName.setText(mDevice);
@@ -105,7 +106,7 @@ public class Motor_GairBoxActivity extends AppCompatActivity {
         try{
             if(!mList.isEmpty()) {
                 for(int i = 0; i < mList.size(); i++) {
-                    if(mList.get(i).getDeviceNmae().equals(mDevice)) {
+                    if(mList.get(i).getDeviceNmae().equals(CalibrationMainActivity.devname)) {
                         bId.setText(mList.get(i).getBandId());
                         bOd.setText(mList.get(i).getBandOd());
                         bMd.setText(mList.get(i).getBandMd());
@@ -128,9 +129,9 @@ public class Motor_GairBoxActivity extends AppCompatActivity {
         if(!(bId.getText().toString().trim().isEmpty()) && !(bOd.getText().toString().trim().isEmpty() && !(bMd.getText().toString().trim().isEmpty())
                 && !(pId.getText().toString().trim().isEmpty()) && !(pOd.getText().toString().trim().isEmpty()) && !(pMd.getText().toString().trim().isEmpty()) && !(gbrText.getText().toString().trim().isEmpty())
                 && !(bracketText.getText().toString().trim().isEmpty()) && !(gearText.getText().toString().isEmpty()))) {
-            db.createGearBox(new GearBoxClass(mDevice, bId.getText().toString().trim(), bOd.getText().toString().trim(), bMd.getText().toString().trim(), pId.getText().toString().trim(),pOd.getText().toString().trim(), pMd.getText().toString().trim(), gbrText.getText().toString().trim(), bracketText.getText().toString().trim(), gearText.getText().toString().trim()));
+            System.out.println("Inside go to db" + mDevice);
+            db.createGearBox(new GearBoxClass(mDevice, bId.getText().toString().trim(), bOd.getText().toString().trim(), bMd.getText().toString().trim(), pId.getText().toString().trim(), pOd.getText().toString().trim(), pMd.getText().toString().trim(), gbrText.getText().toString().trim(), bracketText.getText().toString().trim(), gearText.getText().toString().trim()));
         }
-
         bId.setEnabled(false);
         bMd.setEnabled(false);
         bOd.setEnabled(false);
@@ -141,7 +142,6 @@ public class Motor_GairBoxActivity extends AppCompatActivity {
         bracketText.setEnabled(false);
         gearText.setEnabled(false);
         set.setEnabled(false);
-
         finish();
     }
     @Override
